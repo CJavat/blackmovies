@@ -55,11 +55,27 @@ const subirArchivos = (req, res, next) => {
 //! AGREGAR PELÍCULA --
 const agregarPelicula = async (req, res, next) => {
   //TODO: FALTA ARREGLAR QUE LE LLEGUEN LOS DATOS DESDE MULTER.
-  console.log("hollaaa", req.body);
   try {
-    const peliculaAgregada = Peliculas.create(req.body);
+    // console.log(req.files);
+    if (!req.files.fotoPortada) {
+      res.status(406).json({ msg: "La portada es obligatorio" });
+    }
+    if (!req.files.fotoFondo) {
+      res.status(406).json({ msg: "La foto de fondo es obligatorio" });
+    }
+    if (!req.files.pelicula) {
+      res.status(406).json({ msg: "La película es obligatoria" });
+    }
 
-    res.json(peliculaAgregada);
+    req.body.fotoPortada = req.files.fotoPortada[0].filename;
+    req.body.fotoFondo = req.files.fotoFondo[0].filename;
+    req.body.pelicula = req.files.pelicula[0].filename;
+
+    const peliculaAgregada = await Peliculas.create(req.body);
+    peliculaAgregada.save();
+
+    res.json({ msg: "Película agregada correctamente" });
+    return;
   } catch (error) {
     res
       .status(400)
