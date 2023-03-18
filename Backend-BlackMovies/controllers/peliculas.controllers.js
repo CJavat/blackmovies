@@ -3,6 +3,7 @@ const shortid = require("shortid");
 const multer = require("multer");
 
 const Peliculas = require("../models/Peliculas.models");
+const { response } = require("express");
 
 //! --------- CONFIGURACIÓN MULTER ---------
 const configuracionMulter = {
@@ -49,6 +50,17 @@ const subirArchivos = (req, res, next) => {
 //! ----------------------------------------
 
 //! MOSTRAR PELÍCULAS --
+const mostrarPeliculas = async (req, res, next) => {
+  let pagina = 1;
+  if (req.params.pagina) pagina = req.params.pagina;
+
+  const peliculas = await Peliculas.paginate({}, { limit: 2, page: pagina }); //TODO: MODIFICARLO
+
+  if (!peliculas) {
+    res.status(404).json({ msg: "No se encontraron películas" });
+  }
+  res.json(peliculas);
+};
 
 //! MOSTRAR PELÍCULA POR SU ID --
 
@@ -94,6 +106,7 @@ const agregarPelicula = async (req, res, next) => {
 
 module.exports = {
   subirArchivos,
+  mostrarPeliculas,
   agregarPelicula,
 };
 

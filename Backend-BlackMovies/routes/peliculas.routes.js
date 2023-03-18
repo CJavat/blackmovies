@@ -5,8 +5,11 @@ const router = express.Router();
 //! IMPORTAR CONTROLLERS --
 const {
   subirArchivos,
+  mostrarPeliculas,
   agregarPelicula,
 } = require("../controllers/peliculas.controllers");
+
+router.get("/mostrar-peliculas/:pagina", mostrarPeliculas);
 
 router.post("/agregar-pelicula", subirArchivos, agregarPelicula);
 

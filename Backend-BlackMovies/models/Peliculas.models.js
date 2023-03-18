@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const { Schema } = mongoose;
 
 const peliculasSchema = new Schema({
@@ -32,5 +34,8 @@ const peliculasSchema = new Schema({
   },
   valoracion: Number,
 });
+
+//* Agrerar la paginación en Mongoose.
+peliculasSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Peliculas", peliculasSchema);
