@@ -1,9 +1,9 @@
 //! IMPORTAR DEPENDENCIAS --
 const shortid = require("shortid");
 const multer = require("multer");
+const { unlink } = require("node:fs/promises");
 
 const Peliculas = require("../models/Peliculas.models");
-const { response } = require("express");
 
 //! --------- CONFIGURACIÓN MULTER ---------
 const configuracionMulter = {
@@ -126,13 +126,51 @@ const actualizarPelicula = async (req, res) => {
   try {
     const existePelicula = await Peliculas.findById(id);
     if (!existePelicula) {
-      res.status(404).json({ msg: "No existe una película" });
+      return res.status(404).json({ msg: "No existe una película" });
     }
-    console.log(datosActualizados);
-    //TODO: FALTA VALIDAR EL req.file -> HACER LO MISMO QUE EN EL PROYECTO ANTERIOR, SI ACTUALIZARON FOTO, ELIMINAR EL VIEJO Y AGREGAR EL NUEVO, SINO EXISTE, SIMPLEMENTE AGREGAR EL QUE YA TENIA A LA DB DE NUEVO.
-    // if(req.files?.fotoPortada)
-    // if(req.files?.fotoFondo)
-    // if(req.files?.pelicula)
+
+    if (req.files.fotoPortada) {
+      datosActualizados.fotoPortada = req.files.fotoPortada[0].filename;
+
+      if (existePelicula?.fotoPortada) {
+        //* Eliminar imagen vieja.
+        await unlink(
+          `${__dirname}/../public/uploads/${existePelicula?.fotoPortada}`
+        );
+      }
+    }
+
+    if (req.files.fotoFondo) {
+      datosActualizados.fotoFondo = req.files.fotoFondo[0].filename;
+
+      if (existePelicula?.fotoFondo) {
+        //* Eliminar imagen vieja.
+        await unlink(
+          `${__dirname}/../public/uploads/${existePelicula?.fotoFondo}`
+        );
+      }
+    }
+    if (req.files.pelicula) {
+      datosActualizados.pelicula = req.files.pelicula[0].filename;
+
+      if (existePelicula?.pelicula) {
+        //* Eliminar película vieja.
+        await unlink(
+          `${__dirname}/../public/uploads/${existePelicula?.pelicula}`
+        );
+      }
+    }
+
+    //TODO: REVISAR QUE ESTO FUNCIONE BIEN.
+    await Peliculas.findOneAndUpdate(
+      { _id: existePelicula._id },
+      datosActualizados,
+      {
+        new: true,
+      }
+    );
+
+    res.json({ msg: "Película actualizada correctamente" });
   } catch (error) {
     res
       .status(400)
