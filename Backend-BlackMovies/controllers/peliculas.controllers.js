@@ -51,18 +51,41 @@ const subirArchivos = (req, res, next) => {
 
 //! MOSTRAR PELÍCULAS --
 const mostrarPeliculas = async (req, res, next) => {
+  //* Asignación de página por default en 1.
   let pagina = 1;
-  if (req.params.pagina) pagina = req.params.pagina;
+  try {
+    if (req.params.pagina) pagina = parseInt(req.params.pagina, 10);
 
-  const peliculas = await Peliculas.paginate({}, { limit: 2, page: pagina }); //TODO: MODIFICARLO
+    const peliculas = await Peliculas.paginate({}, { limit: 12, page: pagina });
 
-  if (!peliculas) {
-    res.status(404).json({ msg: "No se encontraron películas" });
+    if (!peliculas) {
+      res.status(404).json({ msg: "No se encontraron películas" });
+    }
+    res.json(peliculas);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: "Hubo un error en la consulta: " + error.message });
   }
-  res.json(peliculas);
 };
 
 //! MOSTRAR PELÍCULA POR SU ID --
+const mostrarPelicula = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const pelicula = await Peliculas.findById(id);
+    if (!pelicula) {
+      res.status(404).json({ msg: "No se encontró ninguna pelicula" });
+    }
+
+    res.json(pelicula);
+  } catch (error) {
+    res
+      .status(404)
+      .json({ msg: "Ocurrió un error en la consulta: " + error.message });
+  }
+};
 
 //! AGREGAR PELÍCULA --
 const agregarPelicula = async (req, res, next) => {
@@ -96,10 +119,29 @@ const agregarPelicula = async (req, res, next) => {
 };
 
 //! ACTUALIZAR PELÍCULA --
+const actualizarPelicula = async (req, res) => {
+  const { id } = req.params;
+  const datosActualizados = req.body;
 
-//! MODIFICAR PELÍCULA --
+  try {
+    const existePelicula = await Peliculas.findById(id);
+    if (!existePelicula) {
+      res.status(404).json({ msg: "No existe una película" });
+    }
+    console.log(datosActualizados);
+    //TODO: FALTA VALIDAR EL req.file -> HACER LO MISMO QUE EN EL PROYECTO ANTERIOR, SI ACTUALIZARON FOTO, ELIMINAR EL VIEJO Y AGREGAR EL NUEVO, SINO EXISTE, SIMPLEMENTE AGREGAR EL QUE YA TENIA A LA DB DE NUEVO.
+    // if(req.files?.fotoPortada)
+    // if(req.files?.fotoFondo)
+    // if(req.files?.pelicula)
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Hubo un error en la consulta: ${error.message}` });
+  }
+};
 
 //! ELIMINAR PELÍCULA --
+const eliminarPelicula = async (req, res) => {};
 
 //! MOSTRAR PELÍCULAS POR GENERO --
 //! MOSTRAR PELÍCULAS POR VALORACIÓN --
@@ -107,7 +149,10 @@ const agregarPelicula = async (req, res, next) => {
 module.exports = {
   subirArchivos,
   mostrarPeliculas,
+  mostrarPelicula,
   agregarPelicula,
+  actualizarPelicula,
+  eliminarPelicula,
 };
 
 //TODO: TERMINAR CONTROLLER.
