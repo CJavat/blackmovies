@@ -3,9 +3,12 @@ const express = require("express");
 const router = express.Router();
 
 //! IMPORTAR CONTROLLERS --
-const { primero } = require("../controllers/peliculas.controllers");
+const {
+  subirArchivos,
+  agregarPelicula,
+} = require("../controllers/peliculas.controllers");
 
-router.get("/", primero);
+router.post("/agregar-pelicula", subirArchivos /* agregarPelicula */);
 
 module.exports = router;
 

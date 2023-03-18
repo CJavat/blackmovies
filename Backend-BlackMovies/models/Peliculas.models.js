@@ -3,30 +3,34 @@ const { Schema } = mongoose;
 
 const peliculasSchema = new Schema({
   nombrePelicula: {
-    type: "String",
+    type: String,
     trim: true,
     required: true,
   },
-  yearPelicula: {
-    type: number,
-    required: true,
-  },
-  portada: {
-    type: "String",
-    trim: true,
+  fechaPelicula: {
+    type: Date,
     required: true,
   },
   generos: [String],
   sinopsis: {
-    type: "String",
+    type: String,
     trim: true,
     required: true,
   },
-  video: {
-    type: "String",
+  fotoPortada: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  fotoFondo: {
+    type: String,
     trim: true,
   },
-  valoracion: number,
+  película: {
+    type: String,
+    trim: true,
+  },
+  valoracion: Number,
 });
 
 module.exports = mongoose.model("Peliculas", peliculasSchema);

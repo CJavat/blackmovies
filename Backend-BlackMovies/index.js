@@ -15,8 +15,7 @@ const rutaPeliculas = require("./routes/peliculas.routes");
 const app = express(); //* Crear servidor.
 
 //* Habilitar carpetas estaticas.
-app.use(express.static(path.join("./public/movies")));
-app.use(express.static(path.join("./public/pictures")));
+app.use(express.static(path.join("./public/uploads")));
 
 //* Configuraciones.
 app.use(bodyParser.urlencoded({ extended: true }));
