@@ -8,7 +8,7 @@ const {
   agregarPelicula,
 } = require("../controllers/peliculas.controllers");
 
-router.post("/agregar-pelicula", subirArchivos /* agregarPelicula */);
+router.post("/agregar-pelicula", subirArchivos, agregarPelicula);
 
 module.exports = router;
 

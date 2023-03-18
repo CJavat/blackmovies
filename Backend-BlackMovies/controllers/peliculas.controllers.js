@@ -39,7 +39,6 @@ const uploadArchivos = multer(configuracionMulter).fields([
 
 const subirArchivos = (req, res, next) => {
   uploadArchivos(req, res, function (error) {
-    // console.log(req);
     if (error) {
       return res.json({ msg: error });
     }
@@ -55,6 +54,8 @@ const subirArchivos = (req, res, next) => {
 
 //! AGREGAR PELÍCULA --
 const agregarPelicula = async (req, res, next) => {
+  //TODO: FALTA ARREGLAR QUE LE LLEGUEN LOS DATOS DESDE MULTER.
+  console.log("hollaaa", req.body);
   try {
     const peliculaAgregada = Peliculas.create(req.body);
 

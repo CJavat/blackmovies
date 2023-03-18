@@ -26,7 +26,7 @@ const peliculasSchema = new Schema({
     type: String,
     trim: true,
   },
-  película: {
+  pelicula: {
     type: String,
     trim: true,
   },
