@@ -89,17 +89,16 @@ const mostrarPelicula = async (req, res, next) => {
 
 //! AGREGAR PELÍCULA --
 const agregarPelicula = async (req, res, next) => {
-  //TODO: FALTA ARREGLAR QUE LE LLEGUEN LOS DATOS DESDE MULTER.
   try {
     // console.log(req.files);
     if (!req.files.fotoPortada) {
-      res.status(406).json({ msg: "La portada es obligatorio" });
+      return res.status(406).json({ msg: "La portada es obligatorio" });
     }
     if (!req.files.fotoFondo) {
-      res.status(406).json({ msg: "La foto de fondo es obligatorio" });
+      return res.status(406).json({ msg: "La foto de fondo es obligatorio" });
     }
     if (!req.files.pelicula) {
-      res.status(406).json({ msg: "La película es obligatoria" });
+      return res.status(406).json({ msg: "La película es obligatoria" });
     }
 
     req.body.fotoPortada = req.files.fotoPortada[0].filename;
@@ -161,7 +160,6 @@ const actualizarPelicula = async (req, res) => {
       }
     }
 
-    //TODO: REVISAR QUE ESTO FUNCIONE BIEN.
     await Peliculas.findOneAndUpdate(
       { _id: existePelicula._id },
       datosActualizados,
@@ -179,10 +177,89 @@ const actualizarPelicula = async (req, res) => {
 };
 
 //! ELIMINAR PELÍCULA --
-const eliminarPelicula = async (req, res) => {};
+const eliminarPelicula = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const obtenerPelicula = await Peliculas.findById(id);
+    if (!obtenerPelicula) {
+      return res.status(404).json({ msg: "No se pudo encontrar la pelicula." });
+    }
+
+    //* Eliminar imagenes guardadas.
+    await unlink(
+      `${__dirname}/../public/uploads/${obtenerPelicula.fotoPortada}`
+    );
+    await unlink(`${__dirname}/../public/uploads/${obtenerPelicula.fotoFondo}`);
+    await unlink(`${__dirname}/../public/uploads/${obtenerPelicula.pelicula}`);
+
+    await Peliculas.findByIdAndDelete(id);
+
+    res.status(200).json({ msg: "Película eliminada correctamente" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: "Hubo un error en la consulta: " + error.message });
+  }
+};
 
 //! MOSTRAR PELÍCULAS POR GENERO --
+const mostrarPorGenero = async (req, res) => {
+  const { genero } = req.params;
+
+  try {
+    const obtenerPeliculas = await Peliculas.find({ generos: genero });
+    if (!obtenerPeliculas || obtenerPeliculas.length === 0) {
+      return res
+        .status(404)
+        .json({ msg: "No existe ninguna pelicula con ese genero" });
+    }
+
+    res.json(obtenerPeliculas);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta ${error.message}` });
+  }
+};
+
 //! MOSTRAR PELÍCULAS POR VALORACIÓN --
+const mostrarPorValoracion = async (req, res) => {
+  const { valoracion } = req.params;
+
+  try {
+    const obtenerPeliculas = await Peliculas.find({ valoracion });
+    if (!obtenerPeliculas || obtenerPeliculas.length === 0) {
+      return res.status(404).json({ msg: "No se encontraron películas" });
+    }
+
+    res.json(obtenerPeliculas);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
+};
+
+//! BUSCAR PELÍCULAS POR NOMBRE --
+const buscarPeliculas = async (req, res) => {
+  const { nombre } = req.body;
+
+  try {
+    //TODO: HACER QUE ENCUENTRE TODAS LAS PELICULAS QUE TENGAN LA PALABRA O FRASE QUE OBTIENE.
+    const obtenerPeliculas = await Peliculas.find({
+      nombrePelicula: [nombre],
+    });
+    if (!obtenerPeliculas) {
+      return res.status(404).json({ msg: "No se encontraron películas" });
+    }
+
+    res.json(obtenerPeliculas);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurriò un error en la consulta: ${error.message}` });
+  }
+};
 
 module.exports = {
   subirArchivos,
@@ -191,6 +268,9 @@ module.exports = {
   agregarPelicula,
   actualizarPelicula,
   eliminarPelicula,
+  mostrarPorGenero,
+  mostrarPorValoracion,
+  buscarPeliculas,
 };
 
 //TODO: TERMINAR CONTROLLER.
