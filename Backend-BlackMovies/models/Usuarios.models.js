@@ -38,4 +38,18 @@ const usuariosSchema = new Schema({
   },
 });
 
+//* Método para hashear los passwords.
+usuariosSchema.pre("save", async function (next) {
+  //* Si el password ya esta hasheado...
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  //* Si no esta hasheado.
+  const hash = await bcrypt.hash(this.password, 12);
+  this.password = hash;
+
+  next();
+});
+
 module.exports = mongoose.model("Usuarios", usuariosSchema);

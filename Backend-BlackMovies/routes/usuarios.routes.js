@@ -40,6 +40,9 @@ router.put("/actualizar-usuario/:id", actualizarUsuario);
 //! ELIMINAR CUENTA --
 router.delete("/eliminar-usuario/:id", eliminarUsuario);
 
+//! DECODIFICAR TOKEN DE USUARIO --
+// router.get("/decodificar-token/:token", decodificarToken);
+
 module.exports = router;
 
 //TODO: TERMINAR ESTA RUTA

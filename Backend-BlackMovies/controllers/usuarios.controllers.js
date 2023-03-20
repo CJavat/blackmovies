@@ -1,9 +1,11 @@
 //! IMPORTAR DEPENDENCIAS --
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 //! IMPORTAR MODELO --
 const Usuarios = require("../models/Usuarios.models");
+const { request } = require("express");
 
 //! REGISTRAR UN USUARIO --
 const agregarUsuario = async (req, res) => {
@@ -45,13 +47,81 @@ const agregarUsuario = async (req, res) => {
 };
 
 //! INICIAR SESIÓN --
-const login = (req, res) => {};
+const login = async (req, res) => {
+  try {
+    const existeUsuario = await Usuarios.findOne({
+      nickname: req.body.nickname,
+    });
+
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "El nickname no existe" });
+    }
+
+    const comprobarPassword = bcrypt.compareSync(
+      req.body.password,
+      existeUsuario.password
+    );
+
+    if (!comprobarPassword) {
+      return res.status(401).json({ msg: "Password incorrecto" });
+    }
+
+    const { _id, nombre, nickname, email } = existeUsuario;
+
+    //* Generar el JWT.
+    const token = jwt.sign(
+      { id: _id.toString(), nombre, nickname, email },
+      process.env.LLAVE,
+      { expiresIn: "30d" }
+    );
+
+    res.json({ msg: "Autenticación exitosa", token });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: "Ocurrió un error en la consulta: " + error.message });
+  }
+};
 
 //! ACTUALIZAR USUARIO --
-const actualizarUsuario = (req, res) => {};
+const actualizarUsuario = async (req, res) => {
+  const errors = validationResult(req);
+
+  const { id } = req.params;
+  const datosActualizados = req.body;
+
+  try {
+    //* Comprobar errores de express-validator.
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    }
+
+    //* Comprobar si existe un usuario.
+    const existeUsuario = await Usuarios.findById(id);
+
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    //* Hashear el password actualizado, si existe.
+    if (req.body.password) {
+      //* Hashear el password.
+      const hash = await bcrypt.hash(datosActualizados.password, 12);
+      datosActualizados.password = hash;
+    }
+
+    await Usuarios.findByIdAndUpdate(id, datosActualizados, { new: true });
+
+    res.json({ msg: "Datos actualizados correctamente" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
+};
 
 //! ELIMINAR CUENTA --
-const eliminarUsuario = (req, res) => {};
+const eliminarUsuario = async (req, res) => {};
 
 module.exports = {
   agregarUsuario,
