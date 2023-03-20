@@ -35,7 +35,7 @@ const peliculasSchema = new Schema({
   valoracion: Number,
 });
 
-//* Agrerar la paginación en Mongoose.
+//* Agregar la paginación en Mongoose.
 peliculasSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Peliculas", peliculasSchema);

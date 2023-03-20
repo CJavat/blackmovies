@@ -40,5 +40,3 @@ router.get("/mostrar-valoracion/:valoracion", mostrarPorValoracion);
 router.get("/buscar-peliculas", buscarPeliculas);
 
 module.exports = router;
-
-//TODO: TERMINAR ROUTES.

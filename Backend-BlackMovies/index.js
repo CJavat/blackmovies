@@ -11,6 +11,7 @@ const db = require("./config/db");
 
 //! IMPORTAR RUTAS --
 const rutaPeliculas = require("./routes/peliculas.routes");
+const rutaUsuarios = require("./routes/usuarios.routes");
 
 const app = express(); //* Crear servidor.
 
@@ -26,6 +27,7 @@ app.use(cors());
 
 //* Habilitar rutas.
 app.use("/api/peliculas", rutaPeliculas);
+app.use("/api/usuarios", rutaUsuarios);
 
 //* Iniciar Servidor.
 app.listen(process.env.BACKEND_PORT, () => {

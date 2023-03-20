@@ -245,11 +245,10 @@ const buscarPeliculas = async (req, res) => {
   const { nombre } = req.body;
 
   try {
-    //TODO: HACER QUE ENCUENTRE TODAS LAS PELICULAS QUE TENGAN LA PALABRA O FRASE QUE OBTIENE.
     const obtenerPeliculas = await Peliculas.find({
-      nombrePelicula: [nombre],
+      nombrePelicula: { $regex: nombre, $options: "$i" },
     });
-    if (!obtenerPeliculas) {
+    if (!obtenerPeliculas || obtenerPeliculas.length === 0) {
       return res.status(404).json({ msg: "No se encontraron películas" });
     }
 
@@ -272,5 +271,3 @@ module.exports = {
   mostrarPorValoracion,
   buscarPeliculas,
 };
-
-//TODO: TERMINAR CONTROLLER.
