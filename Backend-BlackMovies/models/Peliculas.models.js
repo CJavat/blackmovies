@@ -33,6 +33,8 @@ const peliculasSchema = new Schema({
     trim: true,
   },
   valoracion: Number,
+
+  //TODO: AGERGAR UN CAMPO, PARA AGREGAR COMENTARIOS.
 });
 
 //* Agregar la paginación en Mongoose.

@@ -5,8 +5,9 @@ const bcrypt = require("bcrypt");
 //! IMPORTAR MODELO --
 const Usuarios = require("../models/Usuarios.models");
 
+//! REGISTRAR UN USUARIO --
 const agregarUsuario = async (req, res) => {
-  const { email } = req.body;
+  const { nickname, email } = req.body;
   const errors = validationResult(req);
 
   try {
@@ -27,6 +28,11 @@ const agregarUsuario = async (req, res) => {
       return res.status(400).json({ msg: "El email ya ha sido registrado" });
     }
 
+    const existeNickname = await Usuarios.find({ nickname });
+    if (existeNickname.length >= 1) {
+      return res.status(400).json({ msg: "El nickname ya ha sido registrado" });
+    }
+
     const crearUsuario = await Usuarios.create(req.body);
     crearUsuario.save();
 
@@ -38,8 +44,20 @@ const agregarUsuario = async (req, res) => {
   }
 };
 
-//TODO: TERMINAR ESTE CONTROLLER.
+//! INICIAR SESIÓN --
+const login = (req, res) => {};
+
+//! ACTUALIZAR USUARIO --
+const actualizarUsuario = (req, res) => {};
+
+//! ELIMINAR CUENTA --
+const eliminarUsuario = (req, res) => {};
 
 module.exports = {
   agregarUsuario,
+  login,
+  actualizarUsuario,
+  eliminarUsuario,
 };
+
+//TODO: TERMINAR ESTE CONTROLLER.

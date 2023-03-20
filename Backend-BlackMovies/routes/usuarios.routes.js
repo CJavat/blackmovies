@@ -4,8 +4,14 @@ const router = express.Router();
 const { check } = require("express-validator");
 
 //! IMPORTAR CONTROLLER --
-const { agregarUsuario } = require("../controllers/usuarios.controllers");
+const {
+  agregarUsuario,
+  login,
+  actualizarUsuario,
+  eliminarUsuario,
+} = require("../controllers/usuarios.controllers");
 
+//! REGISTRAR UNA CUENTA --
 router.post(
   "/agregar-usuario",
   [
@@ -24,6 +30,15 @@ router.post(
   ],
   agregarUsuario
 );
+
+//! INICIAR SESIÓN --
+router.post("/iniciar-sesion", login);
+
+//! ACTUALIZAR CUENTA --
+router.put("/actualizar-usuario/:id", actualizarUsuario);
+
+//! ELIMINAR CUENTA --
+router.delete("/eliminar-usuario/:id", eliminarUsuario);
 
 module.exports = router;
 
