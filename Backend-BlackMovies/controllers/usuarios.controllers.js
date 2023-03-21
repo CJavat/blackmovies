@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 //! IMPORTAR MODELO --
 const Usuarios = require("../models/Usuarios.models");
-const { request } = require("express");
 
 //! REGISTRAR UN USUARIO --
 const agregarUsuario = async (req, res) => {
@@ -36,7 +35,7 @@ const agregarUsuario = async (req, res) => {
     }
 
     const crearUsuario = await Usuarios.create(req.body);
-    crearUsuario.save();
+    await crearUsuario.save();
 
     res.json({ msg: "Usuario Creado Correctamente" });
   } catch (error) {
@@ -110,7 +109,7 @@ const actualizarUsuario = async (req, res) => {
       datosActualizados.password = hash;
     }
 
-    await Usuarios.findByIdAndUpdate(id, datosActualizados, { new: true });
+    await existeUsuario.updateOne(datosActualizados);
 
     res.json({ msg: "Datos actualizados correctamente" });
   } catch (error) {
@@ -121,13 +120,41 @@ const actualizarUsuario = async (req, res) => {
 };
 
 //! ELIMINAR CUENTA --
-const eliminarUsuario = async (req, res) => {};
+const eliminarUsuario = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const existeUsuario = await Usuarios.findById(id);
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "No existe el usuario" });
+    }
+
+    //* Eliminar el usuario.
+    await existeUsuario.deleteOne();
+
+    res.json({ msg: "Usuario Eliminado Correctamente" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
+};
+
+//! DECODIFICAR EL TOKEN --
+const decodificarToken = async (req, res) => {
+  const { token } = req.body;
+  try {
+    const usuario = jwt.verify(token, process.env.LLAVE);
+    res.json(usuario);
+  } catch (error) {
+    res.status(400).json({ msg: `Ocurrió un error: ${error.message}` });
+  }
+};
 
 module.exports = {
   agregarUsuario,
   login,
   actualizarUsuario,
   eliminarUsuario,
+  decodificarToken,
 };
-
-//TODO: TERMINAR ESTE CONTROLLER.

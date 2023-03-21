@@ -9,6 +9,7 @@ const {
   login,
   actualizarUsuario,
   eliminarUsuario,
+  decodificarToken,
 } = require("../controllers/usuarios.controllers");
 
 //! REGISTRAR UNA CUENTA --
@@ -41,8 +42,6 @@ router.put("/actualizar-usuario/:id", actualizarUsuario);
 router.delete("/eliminar-usuario/:id", eliminarUsuario);
 
 //! DECODIFICAR TOKEN DE USUARIO --
-// router.get("/decodificar-token/:token", decodificarToken);
+router.post("/decodificar-token", decodificarToken);
 
 module.exports = router;
-
-//TODO: TERMINAR ESTA RUTA
