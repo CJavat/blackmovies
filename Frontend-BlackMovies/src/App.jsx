@@ -1,13 +1,29 @@
-function App() {
-  const cambiarDarkMode = () => {
-    document.documentElement.classList.toggle("dark");
-  };
+//! IMPORTAR DEPENDENCIAS --
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+//! IMPORTAR LAYOUT --
+import LayoutPeliculas from "../layouts/LayoutPeliculas";
+
+//! IMPORTAR CONTEXT --
+import { PeliculasProvider } from "./context/PeliculasProvider";
+
+//! IMPORTAR PÁGINAS --
+import Inicio from "./pages/Inicio";
+
+//! IMPORTAR COMPONENTES --
+
+function App() {
   return (
-    <div className="text-center">
-      <p className="dark:bg-black dark:text-white">Hola Mundo</p>
-      <button onClick={cambiarDarkMode}>Cambiar Tema</button>
-    </div>
+    <BrowserRouter>
+      <PeliculasProvider>
+        <Routes>
+          <Route element={<LayoutPeliculas />}>
+            <Route path="/" element={<Inicio />} />
+          </Route>
+        </Routes>
+      </PeliculasProvider>
+      {/* //TODO: CREAR COMPONENTE DE NOT FOUND */}
+    </BrowserRouter>
   );
 }
 
