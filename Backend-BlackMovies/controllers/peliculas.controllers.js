@@ -260,17 +260,33 @@ const buscarPeliculas = async (req, res) => {
   }
 };
 
-//! AGREGAR COMENTARIOS --
+//! AGREGAR COMENTARIOS A LA PELÍCULA --
 const comentarPelicula = async (req, res) => {
-  const { id: idPelicula } = req.params;
-  const { id, texto } = req.body;
+  const { id } = req.params;
+  const { usuario, texto } = req.body;
 
-  res.json({
-    msg: `IdPelicula: ${idPelicula} - idUsuario ${id}, texto: ${texto}`,
-  });
+  try {
+    const existePelicula = await Peliculas.findById(id);
+    if (!existePelicula) {
+      return res.status(404).json({ msg: "No existe la película" });
+    }
 
-  //TODO: AGREGAR UN COMENTARIO.
-  //? ES UN UPDATE, SIMPLEMENTE ACTUALIZAR EL CAMPO "COMENTARIOS"
+    const agregarComentario = {
+      usuario,
+      texto,
+    };
+    console.log(agregarComentario);
+    const comentarios = [...existePelicula.comentarios, agregarComentario];
+    existePelicula.comentarios = comentarios;
+
+    await existePelicula.save();
+
+    res.json({ msg: "Comentario agregado correctamente" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
 };
 
 module.exports = {

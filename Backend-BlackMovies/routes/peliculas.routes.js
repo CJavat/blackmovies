@@ -41,6 +41,6 @@ router.get("/mostrar-valoracion/:valoracion", mostrarPorValoracion);
 router.get("/buscar-peliculas", buscarPeliculas);
 
 //! COMENTAR PELÍCULA --
-router.put("/comentar-pelicula/:id", comentarPelicula);
+router.post("/comentar-pelicula/:id", comentarPelicula);
 
 module.exports = router;

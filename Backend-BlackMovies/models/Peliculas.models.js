@@ -35,7 +35,7 @@ const peliculasSchema = new Schema({
   valoracion: Number,
   comentarios: [
     {
-      id: {
+      usuario: {
         type: Schema.Types.ObjectId,
         ref: "Usuarios",
       },
