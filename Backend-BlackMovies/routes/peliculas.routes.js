@@ -13,6 +13,7 @@ const {
   mostrarPorGenero,
   mostrarPorValoracion,
   buscarPeliculas,
+  comentarPelicula,
 } = require("../controllers/peliculas.controllers");
 
 //! MOSTRAR PELICULAS - SEPARADOS POR PÁGINA --
@@ -39,6 +40,7 @@ router.get("/mostrar-valoracion/:valoracion", mostrarPorValoracion);
 //! BUSCAR PELÍCULAS POR SU NOMBRE --
 router.get("/buscar-peliculas", buscarPeliculas);
 
-//TODO: AGREGAR UN COMENTARIO.
+//! COMENTAR PELÍCULA --
+router.put("/comentar-pelicula/:id", comentarPelicula);
 
 module.exports = router;

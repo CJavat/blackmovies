@@ -33,8 +33,18 @@ const peliculasSchema = new Schema({
     trim: true,
   },
   valoracion: Number,
-
-  //TODO: AGERGAR UN CAMPO, PARA AGREGAR COMENTARIOS.
+  comentarios: [
+    {
+      id: {
+        type: Schema.Types.ObjectId,
+        ref: "Usuarios",
+      },
+      texto: {
+        type: String,
+        trim: true,
+      },
+    },
+  ],
 });
 
 //* Agregar la paginación en Mongoose.

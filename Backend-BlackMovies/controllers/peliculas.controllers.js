@@ -260,7 +260,18 @@ const buscarPeliculas = async (req, res) => {
   }
 };
 
-//TODO: AGREGAR UN COMENTARIO.
+//! AGREGAR COMENTARIOS --
+const comentarPelicula = async (req, res) => {
+  const { id: idPelicula } = req.params;
+  const { id, texto } = req.body;
+
+  res.json({
+    msg: `IdPelicula: ${idPelicula} - idUsuario ${id}, texto: ${texto}`,
+  });
+
+  //TODO: AGREGAR UN COMENTARIO.
+  //? ES UN UPDATE, SIMPLEMENTE ACTUALIZAR EL CAMPO "COMENTARIOS"
+};
 
 module.exports = {
   subirArchivos,
@@ -272,4 +283,5 @@ module.exports = {
   mostrarPorGenero,
   mostrarPorValoracion,
   buscarPeliculas,
+  comentarPelicula,
 };
