@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //! IMPORTAR LAYOUT --
-import LayoutPeliculas from "../layouts/LayoutPeliculas";
+import LayoutPeliculas from "./layouts/LayoutPeliculas";
 
 //! IMPORTAR CONTEXT --
 import { PeliculasProvider } from "./context/PeliculasProvider";

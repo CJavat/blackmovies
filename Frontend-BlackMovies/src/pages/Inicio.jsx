@@ -1,5 +1,10 @@
 const Inicio = () => {
-  return <div className="">Inicio</div>;
+  return (
+    <div>
+      <div>BUSCAR PELICULA</div>
+      MOSTRAR PELICULAS
+    </div>
+  );
 };
 
 export default Inicio;
