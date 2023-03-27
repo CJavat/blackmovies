@@ -9,6 +9,8 @@ import { PeliculasProvider } from "./context/PeliculasProvider";
 
 //! IMPORTAR PÁGINAS --
 import Inicio from "./pages/Inicio";
+import Pelicula from "./pages/Pelicula";
+import RegistrarCuenta from "./pages/RegistrarCuenta";
 
 //! IMPORTAR COMPONENTES --
 
@@ -19,6 +21,8 @@ function App() {
         <Routes>
           <Route element={<LayoutPeliculas />}>
             <Route path="/" element={<Inicio />} />
+            <Route path="/registrar-cuenta" element={<RegistrarCuenta />} />
+            <Route path="/pelicula/:id" element={<Pelicula />} />
           </Route>
         </Routes>
       </PeliculasProvider>
