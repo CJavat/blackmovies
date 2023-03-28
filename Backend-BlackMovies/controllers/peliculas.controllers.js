@@ -289,6 +289,8 @@ const comentarPelicula = async (req, res) => {
   }
 };
 
+//TODO: AGREGAR UNA RUTA PARA ACTUALIZAR SOLO LA VALORACIÓN. (SACAR PROMEDIO)
+
 module.exports = {
   subirArchivos,
   mostrarPeliculas,

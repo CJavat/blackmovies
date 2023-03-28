@@ -9,8 +9,10 @@ import { PeliculasProvider } from "./context/PeliculasProvider";
 
 //! IMPORTAR PÁGINAS --
 import Inicio from "./pages/Inicio";
-import Pelicula from "./pages/Pelicula";
+import IniciarSesion from "./pages/IniciarSesion";
 import RegistrarCuenta from "./pages/RegistrarCuenta";
+import Pelicula from "./pages/Pelicula";
+import NotFound from "./pages/NotFound";
 
 //! IMPORTAR COMPONENTES --
 
@@ -21,12 +23,13 @@ function App() {
         <Routes>
           <Route element={<LayoutPeliculas />}>
             <Route path="/" element={<Inicio />} />
+            <Route path="/iniciar-sesion" element={<IniciarSesion />} />
             <Route path="/registrar-cuenta" element={<RegistrarCuenta />} />
             <Route path="/pelicula/:id" element={<Pelicula />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </PeliculasProvider>
-      {/* //TODO: CREAR COMPONENTE DE NOT FOUND */}
     </BrowserRouter>
   );
 }

@@ -1,19 +1,9 @@
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
-import Pelicula from "./Pelicula";
 import usePeliculas from "../hooks/usePeliculas";
-import { useEffect, useState } from "react";
 import Paginacion from "../components/Paginacion";
 
 const Inicio = () => {
-  const {
-    guardarPeliculas,
-    numeroPagina,
-    paginas,
-    setGuardarPeliculas,
-    setNumeroPagina,
-    setPaginas,
-  } = usePeliculas();
+  const { guardarPeliculas, paginas, setNumeroPagina } = usePeliculas();
 
   const cambiarPagina = (pagina) => {
     setNumeroPagina(pagina);
@@ -24,13 +14,42 @@ const Inicio = () => {
   return (
     <>
       <div className="w-full flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
-        {/* //TODO: PONER LA VALORACION ARRIBA O AL LADO DE LA IMAGEN, CON UNA ESTRELLA AL LADO */}
         {guardarPeliculas.docs?.map((pelicula) => (
           <div
             key={pelicula._id}
             className="movilS:w-9/12 movilL:w-8/12 tablet:w-6/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between h-full"
           >
             <Link to={`/pelicula/${pelicula._id}`}>
+              <p className="font-bold my-1">
+                Puntuación:{" "}
+                <span>
+                  <i
+                    className={`fa-star ${
+                      pelicula.valoracion >= 1 ? "fa-solid" : "fa-regular"
+                    }`}
+                  />
+                  <i
+                    className={`fa-star ${
+                      pelicula.valoracion >= 2 ? "fa-solid" : "fa-regular"
+                    }`}
+                  />
+                  <i
+                    className={`fa-star ${
+                      pelicula.valoracion >= 3 ? "fa-solid" : "fa-regular"
+                    }`}
+                  />
+                  <i
+                    className={`fa-star ${
+                      pelicula.valoracion >= 4 ? "fa-solid" : "fa-regular"
+                    }`}
+                  />
+                  <i
+                    className={`fa-star ${
+                      pelicula.valoracion >= 5 ? "fa-solid" : "fa-regular"
+                    }`}
+                  />
+                </span>{" "}
+              </p>
               <img
                 src={`http://localhost:5000/${pelicula.fotoPortada}`}
                 alt={`Foto: ${pelicula.fotoPortada}`}
@@ -47,8 +66,6 @@ const Inicio = () => {
             </Link>
           </div>
         ))}
-
-        {/* AQUI VA LA BARRA DE PAGINAS */}
       </div>
       <div className="">
         {guardarPeliculas?.prevPage ? (
@@ -71,5 +88,3 @@ const Inicio = () => {
 };
 
 export default Inicio;
-
-//TODO: TERMINAR PÁGINA.
