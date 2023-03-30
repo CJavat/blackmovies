@@ -12,9 +12,37 @@ const LayoutPeliculas = () => {
     numeroPagina,
     paginas,
     guardarPeliculas,
+    token,
+    usuarioLogeado,
     setPaginas,
     setGuardarPeliculas,
+    setToken,
+    setUsuarioLogeado,
   } = usePeliculas();
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+    //TODO: TERMINAR COMPONENTE
+
+    const obtenerUsuario = async () => {
+      try {
+        console.log(token);
+        const respuesta = await clienteAxios.post(
+          "/usuarios/decodificar-token",
+          { token }
+        );
+        console.log("entro");
+        console.log(respuesta.data);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "OCURRIÓ UN ERROR",
+          text: error.response.data.msg,
+        });
+      }
+    };
+    if (token?.length > 0) obtenerUsuario();
+  }, []);
 
   useEffect(() => {
     setPaginas([]);
@@ -25,12 +53,12 @@ const LayoutPeliculas = () => {
         );
         setGuardarPeliculas(respuesta.data);
       } catch (error) {
-        console.log(error);
+        console.log(error.response.data.msg);
 
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: { error },
+          text: error.response.data.msg,
         });
       }
     };

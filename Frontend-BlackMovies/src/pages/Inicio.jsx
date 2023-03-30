@@ -9,20 +9,20 @@ const Inicio = () => {
     setNumeroPagina(pagina);
   };
 
-  console.log(guardarPeliculas);
+  // console.log(guardarPeliculas);
 
   return (
     <>
-      <div className="w-full flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
+      <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
         {guardarPeliculas.docs?.map((pelicula) => (
           <div
             key={pelicula._id}
-            className="movilS:w-9/12 movilL:w-8/12 tablet:w-6/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between h-full"
+            className="movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between"
           >
             <Link to={`/pelicula/${pelicula._id}`}>
-              <p className="font-bold my-1">
+              <p className="font-bold my-2">
                 Puntuación:{" "}
-                <span>
+                <span className="block">
                   <i
                     className={`fa-star ${
                       pelicula.valoracion >= 1 ? "fa-solid" : "fa-regular"
@@ -67,6 +67,7 @@ const Inicio = () => {
           </div>
         ))}
       </div>
+
       <div className="">
         {guardarPeliculas?.prevPage ? (
           <button onClick={() => cambiarPagina(guardarPeliculas.prevPage)}>

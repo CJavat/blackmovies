@@ -56,7 +56,7 @@ const mostrarPeliculas = async (req, res, next) => {
   try {
     if (req.params.pagina) pagina = parseInt(req.params.pagina, 10);
 
-    const peliculas = await Peliculas.paginate({}, { limit: 1, page: pagina });
+    const peliculas = await Peliculas.paginate({}, { limit: 12, page: pagina });
 
     if (!peliculas) {
       res.status(404).json({ msg: "No se encontraron películas" });

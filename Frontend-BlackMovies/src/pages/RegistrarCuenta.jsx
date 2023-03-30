@@ -1,5 +1,58 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import clienteAxios from "../helpers/clienteAxios";
+
 const RegistrarCuenta = () => {
-  const registrarCuenta = async () => {};
+  const navigate = useNavigate();
+
+  const [guardarDatos, setGuardarDatos] = useState({});
+  let msgError = "";
+
+  const registrarCuenta = async (e) => {
+    e.preventDefault();
+
+    try {
+      const respuesta = await clienteAxios.post(
+        "/usuarios/agregar-usuario",
+        guardarDatos
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: respuesta.data.msg,
+        showConfirmButton: false,
+        timer: 5000,
+      });
+
+      navigate("/iniciar-sesion");
+    } catch (error) {
+      const obtenerErrores =
+        error.response.data.length > 1
+          ? error.response.data.map((error, index) =>
+              error.msg.concat(index < error.msg.length - 1 ? ", " : "")
+            )
+          : error.response.data;
+
+      obtenerErrores.length > 1
+        ? obtenerErrores.map((error) => (msgError += error))
+        : (msgError = obtenerErrores.msg);
+
+      Swal.fire({
+        icon: "error",
+        title: "OCURRIÓ UN ERROR",
+        text: msgError,
+      });
+    }
+    msgError = "";
+  };
+
+  const obtenerDatos = async (e) => {
+    setGuardarDatos({
+      ...guardarDatos,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <div className="self-center flex-1 my-2 mx-3 px-2 py-2 border-2 border-gray-800 dark:border-gray-200 rounded-2xl movilS:w-11/12 tablet:w-96 flex flex-col justify-center items-center">
@@ -15,30 +68,35 @@ const RegistrarCuenta = () => {
             name="nombre"
             placeholder="Escribe tu nombre"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={obtenerDatos}
           />
           <input
             type="text"
             name="nickname"
             placeholder="Escribe tu nickname"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={obtenerDatos}
           />
           <input
             type="email"
             name="email"
             placeholder="Escribe tu email"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={obtenerDatos}
           />
           <input
             type="password"
             name="password"
             placeholder="Escribe tu password"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={obtenerDatos}
           />
           <input
             type="password"
             name="repassword"
             placeholder="Escribe otra vez tu password"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={obtenerDatos}
           />
         </div>
 
@@ -53,4 +111,3 @@ const RegistrarCuenta = () => {
 };
 
 export default RegistrarCuenta;
-//TODO: TERMINAR COMPONENTE.

@@ -6,6 +6,8 @@ const PeliculasProvider = ({ children }) => {
   const [guardarPeliculas, setGuardarPeliculas] = useState([]);
   const [numeroPagina, setNumeroPagina] = useState(1);
   const [paginas, setPaginas] = useState([]);
+  const [token, setToken] = useState("");
+  const [usuarioLogeado, setUsuarioLogeado] = useState({});
 
   const cambiarDarkMode = () => {
     document.documentElement.classList.toggle("dark");
@@ -33,10 +35,14 @@ const PeliculasProvider = ({ children }) => {
         guardarPeliculas,
         numeroPagina,
         paginas,
+        token,
+        usuarioLogeado,
 
         setPaginas,
         setGuardarPeliculas,
         setNumeroPagina,
+        setToken,
+        setUsuarioLogeado,
 
         cambiarDarkMode,
       }}

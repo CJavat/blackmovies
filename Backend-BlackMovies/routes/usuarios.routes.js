@@ -42,6 +42,6 @@ router.put("/actualizar-usuario/:id", actualizarUsuario);
 router.delete("/eliminar-usuario/:id", eliminarUsuario);
 
 //! DECODIFICAR TOKEN DE USUARIO --
-router.put("/decodificar-token", decodificarToken);
+router.post("/decodificar-token", decodificarToken);
 
 module.exports = router;

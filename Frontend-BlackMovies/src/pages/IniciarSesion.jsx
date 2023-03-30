@@ -1,7 +1,45 @@
-import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import clienteAxios from "../helpers/clienteAxios";
 
 const IniciarSesion = () => {
-  const iniciarSesion = async () => {};
+  const navigate = useNavigate();
+  const [guardandoDatos, setGuardandoDatos] = useState({});
+
+  const iniciarSesion = async (e) => {
+    e.preventDefault();
+    try {
+      const respuesta = await clienteAxios.post(
+        "/usuarios/iniciar-sesion",
+        guardandoDatos
+      );
+
+      const { token } = respuesta.data;
+      localStorage.setItem("token", token);
+
+      Swal.fire({
+        icon: "success",
+        title: respuesta.data.msg,
+        showConfirmButton: false,
+        timer: 5000,
+      });
+      navigate("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "OCURRIÓ UN ERROR",
+        text: error.response.data.msg,
+      });
+    }
+  };
+
+  const almacenarDatos = async (e) => {
+    setGuardandoDatos({
+      ...guardandoDatos,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <div className="self-center flex-1 my-2 mx-3 px-2 py-2 border-2 border-gray-800 dark:border-gray-200 rounded-2xl movilS:w-11/12 tablet:w-96 flex flex-col justify-center items-center">
@@ -17,12 +55,14 @@ const IniciarSesion = () => {
             name="nickname"
             placeholder="Escribe tu nickname"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={almacenarDatos}
           />
           <input
             type="password"
             name="password"
             placeholder="Escribe tu password"
             className="movilS:w-full tablet:w-11/12 px-2 py-1 outline-none bg-white dark:bg-black border-b-black dark:border-b-white placeholder:text-gray-900 dark:placeholder:text-gray-200 border-b-2"
+            onChange={almacenarDatos}
           />
         </div>
 
