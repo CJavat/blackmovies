@@ -9,8 +9,6 @@ const Inicio = () => {
     setNumeroPagina(pagina);
   };
 
-  // console.log(guardarPeliculas);
-
   return (
     <>
       <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">

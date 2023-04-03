@@ -22,17 +22,14 @@ const LayoutPeliculas = () => {
 
   useEffect(() => {
     setToken(localStorage.getItem("token"));
-    //TODO: TERMINAR COMPONENTE
 
     const obtenerUsuario = async () => {
       try {
-        console.log(token);
         const respuesta = await clienteAxios.post(
           "/usuarios/decodificar-token",
           { token }
         );
-        console.log("entro");
-        console.log(respuesta.data);
+        setUsuarioLogeado(respuesta.data);
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -41,8 +38,9 @@ const LayoutPeliculas = () => {
         });
       }
     };
+
     if (token?.length > 0) obtenerUsuario();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     setPaginas([]);

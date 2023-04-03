@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import clienteAxios from "../helpers/clienteAxios";
+import usePeliculas from "../hooks/usePeliculas";
 
 const IniciarSesion = () => {
   const navigate = useNavigate();
   const [guardandoDatos, setGuardandoDatos] = useState({});
+  const { setToken } = usePeliculas();
 
   const iniciarSesion = async (e) => {
     e.preventDefault();
@@ -15,14 +17,15 @@ const IniciarSesion = () => {
         guardandoDatos
       );
 
-      const { token } = respuesta.data;
-      localStorage.setItem("token", token);
+      const { token: tokenLS } = respuesta.data;
+      localStorage.setItem("token", tokenLS);
+      setToken(tokenLS);
 
       Swal.fire({
         icon: "success",
         title: respuesta.data.msg,
         showConfirmButton: false,
-        timer: 5000,
+        timer: 1500,
       });
       navigate("/");
     } catch (error) {
