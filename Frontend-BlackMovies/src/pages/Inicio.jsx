@@ -12,6 +12,7 @@ const Inicio = () => {
   return (
     <>
       <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
+        {/* //TODO: AGREGAR UN CORAZÓN EN LA ESQUINA DE LA IMAGEN. CORAZÓN LLENO SI LO TIENE EN FAV VACÍO SI NO. */}
         {guardarPeliculas.docs?.map((pelicula) => (
           <div
             key={pelicula._id}
@@ -66,7 +67,7 @@ const Inicio = () => {
         ))}
       </div>
 
-      <div className="">
+      <div>
         {guardarPeliculas?.prevPage ? (
           <button onClick={() => cambiarPagina(guardarPeliculas.prevPage)}>
             <i className="fa-solid fa-arrow-left"></i>

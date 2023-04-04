@@ -14,6 +14,8 @@ const {
   mostrarPorValoracion,
   buscarPeliculas,
   comentarPelicula,
+  agregarFavorito,
+  valorarPelicula,
 } = require("../controllers/peliculas.controllers");
 
 //! MOSTRAR PELICULAS - SEPARADOS POR PÁGINA --
@@ -42,5 +44,11 @@ router.get("/buscar-peliculas", buscarPeliculas);
 
 //! COMENTAR PELÍCULA --
 router.post("/comentar-pelicula/:id", comentarPelicula);
+
+//! MARCAR PELICULA COMO FAVORITO --
+router.post("/agregar-favorito", agregarFavorito);
+
+//! VALORAR PELICULA --
+router.post("/valorar-pelicula", valorarPelicula);
 
 module.exports = router;

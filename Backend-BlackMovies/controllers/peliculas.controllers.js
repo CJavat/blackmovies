@@ -289,7 +289,15 @@ const comentarPelicula = async (req, res) => {
   }
 };
 
-//TODO: AGREGAR UNA RUTA PARA ACTUALIZAR SOLO LA VALORACIÓN. (SACAR PROMEDIO)
+//! MARCAR PELICULA COMO FAVORITO --
+const agregarFavorito = async () => {
+  //TODO: AGREGAR UNA RUTA PARA PONER UNA PELICULA COMO FAVORITA.
+};
+
+//! VALORAR PELICULA --
+const valorarPelicula = async () => {
+  //TODO: AGREGAR UNA RUTA PARA ACTUALIZAR SOLO LA VALORACIÓN. (SACAR PROMEDIO)
+};
 
 module.exports = {
   subirArchivos,
@@ -302,4 +310,6 @@ module.exports = {
   mostrarPorValoracion,
   buscarPeliculas,
   comentarPelicula,
+  agregarFavorito,
+  valorarPelicula,
 };
