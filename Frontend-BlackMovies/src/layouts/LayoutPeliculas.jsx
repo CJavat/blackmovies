@@ -14,6 +14,7 @@ const LayoutPeliculas = () => {
     guardarPeliculas,
     token,
     usuarioLogeado,
+
     setPaginas,
     setGuardarPeliculas,
     setToken,
@@ -41,6 +42,31 @@ const LayoutPeliculas = () => {
 
     if (token?.length > 0) obtenerUsuario();
   }, [token]);
+
+  useEffect(() => {
+    const obtenerPeliculasFavoritas = async () => {
+      const id = usuarioLogeado.id;
+
+      try {
+        const respuesta = await clienteAxios.post("/usuarios/obtener-usuario", {
+          id,
+        });
+
+        usuarioLogeado.peliculasFavoritas = respuesta.data.peliculasFavoritas;
+        setUsuarioLogeado(usuarioLogeado);
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "OCURRIÓ UN ERROR",
+          text: error,
+        });
+      }
+    };
+    if (Object.keys(usuarioLogeado).length > 0) {
+      obtenerPeliculasFavoritas();
+    }
+  }, [usuarioLogeado]);
 
   useEffect(() => {
     setPaginas([]);

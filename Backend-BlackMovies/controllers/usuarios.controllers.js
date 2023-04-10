@@ -5,6 +5,25 @@ const jwt = require("jsonwebtoken");
 
 //! IMPORTAR MODELO --
 const Usuarios = require("../models/Usuarios.models");
+const Peliculas = require("../models/Peliculas.models");
+
+//! OBTENER USUARIO POR SU ID --
+const obtenerUsuario = async (req, res, next) => {
+  const { id } = req.body;
+  console.log(id);
+  try {
+    const existeUsuario = await Usuarios.findById(id);
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "El usuario no existe" });
+    }
+
+    res.json(existeUsuario);
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
+};
 
 //! REGISTRAR UN USUARIO --
 const agregarUsuario = async (req, res) => {
@@ -65,11 +84,11 @@ const login = async (req, res) => {
       return res.status(401).json({ msg: "Password incorrecto" });
     }
 
-    const { _id, nombre, nickname, email } = existeUsuario;
+    const { _id, nombre, nickname, email, peliculasFavoritas } = existeUsuario;
 
     //* Generar el JWT.
     const token = jwt.sign(
-      { id: _id.toString(), nombre, nickname, email },
+      { id: _id.toString(), nombre, nickname, email, peliculasFavoritas },
       process.env.LLAVE,
       { expiresIn: "30d" }
     );
@@ -151,10 +170,73 @@ const decodificarToken = async (req, res) => {
   }
 };
 
+//! MARCAR PELICULA COMO FAVORITO --
+const agregarFavorito = async (req, res) => {
+  const { idPelicula, idUsuario } = req.body;
+  try {
+    const existePelicula = await Peliculas.findById(idPelicula);
+    if (!existePelicula) {
+      return res.status(404).json({ msg: "Pelicula no existe" });
+    }
+
+    const existeUsuario = await Usuarios.findById(idUsuario);
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "Usuario no existe" });
+    }
+
+    existeUsuario.peliculasFavoritas = [
+      ...existeUsuario.peliculasFavoritas,
+      idPelicula,
+    ];
+
+    await existeUsuario.save();
+
+    res.json({ msg: "Pelicula agragada correctamente" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: "Ocurrió un erro en la consulta: " + error.message });
+  }
+};
+
+//! ELIMINAR PELICULA FAVORITA --
+const eliminarFavorito = async (req, res) => {
+  const { idPelicula, idUsuario } = req.body;
+  try {
+    const existeUsuario = await Usuarios.findById(idUsuario);
+    if (!existeUsuario) {
+      return res.status(404).json({ msg: "Usuario no existe" });
+    }
+
+    const peliculaFavorita = existeUsuario.peliculasFavoritas.find(
+      (pelicula) => pelicula == idPelicula
+    );
+
+    if (!peliculaFavorita) {
+      return res.status(404).json({ msg: "No existe pelicula" });
+    }
+
+    existeUsuario.peliculasFavoritas = existeUsuario.peliculasFavoritas.filter(
+      (pelicula) => pelicula != idPelicula
+    );
+
+    await existeUsuario.save();
+
+    res.json({ msg: "Pelicula eliminada correctamente" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: "Ocurrió un erro en la consulta: " + error.message });
+  }
+};
+
 module.exports = {
+  obtenerUsuario,
   agregarUsuario,
   login,
   actualizarUsuario,
   eliminarUsuario,
   decodificarToken,
+  agregarFavorito,
+  eliminarFavorito,
 };

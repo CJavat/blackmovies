@@ -5,12 +5,18 @@ const { check } = require("express-validator");
 
 //! IMPORTAR CONTROLLER --
 const {
+  obtenerUsuario,
   agregarUsuario,
   login,
   actualizarUsuario,
   eliminarUsuario,
   decodificarToken,
+  agregarFavorito,
+  eliminarFavorito,
 } = require("../controllers/usuarios.controllers");
+
+//! OBTENER USUARIO --
+router.post("/obtener-usuario", obtenerUsuario);
 
 //! REGISTRAR UNA CUENTA --
 router.post(
@@ -43,5 +49,11 @@ router.delete("/eliminar-usuario/:id", eliminarUsuario);
 
 //! DECODIFICAR TOKEN DE USUARIO --
 router.post("/decodificar-token", decodificarToken);
+
+//! MARCAR PELICULA COMO FAVORITO --
+router.post("/agregar-favorito", agregarFavorito);
+
+//! ELIMINAR PELICULA FAVORITA --
+router.post("/eliminar-favorito", eliminarFavorito);
 
 module.exports = router;

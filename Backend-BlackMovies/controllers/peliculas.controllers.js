@@ -289,14 +289,33 @@ const comentarPelicula = async (req, res) => {
   }
 };
 
-//! MARCAR PELICULA COMO FAVORITO --
-const agregarFavorito = async () => {
-  //TODO: AGREGAR UNA RUTA PARA PONER UNA PELICULA COMO FAVORITA.
-};
-
 //! VALORAR PELICULA --
-const valorarPelicula = async () => {
+const valorarPelicula = async (req, res) => {
   //TODO: AGREGAR UNA RUTA PARA ACTUALIZAR SOLO LA VALORACIÓN. (SACAR PROMEDIO)
+  const { _id, valoracion } = req.body;
+
+  try {
+    const existePelicula = await Peliculas.findById(_id);
+    if (!existePelicula) {
+      return res.status(404).json({ msg: "No existe la película" });
+    }
+
+    if (valoracion < 1 || valoracion > 5) {
+      return res.status(400).json({ msg: "Puntaje incorrecto" });
+    }
+
+    existePelicula.valoracion = Math.floor(
+      (valoracion + existePelicula.valoracion) / 2
+    );
+
+    await existePelicula.save();
+
+    res.json({ msg: "Valoración agregada correctamente" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
 };
 
 module.exports = {
@@ -310,6 +329,5 @@ module.exports = {
   mostrarPorValoracion,
   buscarPeliculas,
   comentarPelicula,
-  agregarFavorito,
   valorarPelicula,
 };

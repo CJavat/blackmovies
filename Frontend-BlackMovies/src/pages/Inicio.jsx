@@ -3,21 +3,35 @@ import usePeliculas from "../hooks/usePeliculas";
 import Paginacion from "../components/Paginacion";
 
 const Inicio = () => {
-  const { guardarPeliculas, paginas, setNumeroPagina } = usePeliculas();
+  const { usuarioLogeado, guardarPeliculas, paginas, setNumeroPagina } =
+    usePeliculas();
 
   const cambiarPagina = (pagina) => {
     setNumeroPagina(pagina);
   };
 
+  console.log(usuarioLogeado);
+
+  /*
+    Favorito:    <i className="fa-solid fa-heart"></i>
+    No Favorito: <i className="fa-regular fa-heart"></i>
+  */
+
   return (
     <>
       <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
-        {/* //TODO: AGREGAR UN CORAZÓN EN LA ESQUINA DE LA IMAGEN. CORAZÓN LLENO SI LO TIENE EN FAV VACÍO SI NO. */}
+        {/* //TODO: AGREGAR UN CORAZÓN EN LA ESQUINA DE LA IMAGEN. CORAZÓN LLENO SI LO TIENE EN FAV VACÍO SI NO, Y AL PRESIONARLO ELIMNAR O ACTUALIZAR, DEPENDIENDO. */}
         {guardarPeliculas.docs?.map((pelicula) => (
           <div
             key={pelicula._id}
             className="movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between"
           >
+            {/* //TODO: FALTA HACER ESO */}
+            {/* {
+              usuarioLogeado.peliculasFavoritas.includes(pelicula._id )
+            } */}
+            {/* https://www.etnassoft.com/2016/11/11/comprobar-si-un-elemento-existe-dentro-de-un-array-en-javascript-sintaxis-es7-includes/ */}
+
             <Link to={`/pelicula/${pelicula._id}`}>
               <p className="font-bold my-2">
                 Puntuación:{" "}
