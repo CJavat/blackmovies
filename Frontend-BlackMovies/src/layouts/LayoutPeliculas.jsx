@@ -14,6 +14,7 @@ const LayoutPeliculas = () => {
     guardarPeliculas,
     token,
     usuarioLogeado,
+    refrescar,
 
     setPaginas,
     setGuardarPeliculas,
@@ -66,7 +67,7 @@ const LayoutPeliculas = () => {
     if (Object.keys(usuarioLogeado).length > 0) {
       obtenerPeliculasFavoritas();
     }
-  }, [usuarioLogeado]);
+  }, [usuarioLogeado, refrescar]);
 
   useEffect(() => {
     setPaginas([]);

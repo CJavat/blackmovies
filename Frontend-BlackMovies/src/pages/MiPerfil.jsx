@@ -5,6 +5,7 @@ const MiPerfil = () => {
   const { usuarioLogeado } = usePeliculas();
 
   const eliminarCuenta = (e) => {
+    // TODO: TERMINAR ELIMINAR CUENTA
     e.preventDefault();
   };
 

@@ -291,7 +291,6 @@ const comentarPelicula = async (req, res) => {
 
 //! VALORAR PELICULA --
 const valorarPelicula = async (req, res) => {
-  //TODO: AGREGAR UNA RUTA PARA ACTUALIZAR SOLO LA VALORACIÓN. (SACAR PROMEDIO)
   const { _id, valoracion } = req.body;
 
   try {

@@ -1,38 +1,111 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import usePeliculas from "../hooks/usePeliculas";
 import Paginacion from "../components/Paginacion";
+import clienteAxios from "../helpers/clienteAxios";
+import Swal from "sweetalert2";
 
 const Inicio = () => {
-  const { usuarioLogeado, guardarPeliculas, paginas, setNumeroPagina } =
-    usePeliculas();
+  const {
+    usuarioLogeado,
+    guardarPeliculas,
+    paginas,
+    refrescar,
+
+    setUsuarioLogeado,
+    setNumeroPagina,
+    setRefrescar,
+  } = usePeliculas();
 
   const cambiarPagina = (pagina) => {
     setNumeroPagina(pagina);
   };
 
-  console.log(usuarioLogeado);
+  const agregarEliminarFavorito = async (esFavorito, datosPelicula) => {
+    try {
+      if (esFavorito === false) {
+        const respuesta = await clienteAxios.post(
+          "/usuarios/agregar-favorito",
+          datosPelicula
+        );
 
-  /*
-    Favorito:    <i className="fa-solid fa-heart"></i>
-    No Favorito: <i className="fa-regular fa-heart"></i>
-  */
+        usuarioLogeado.peliculasFavoritas = [
+          ...usuarioLogeado.peliculasFavoritas,
+          datosPelicula.idPelicula,
+        ];
+        setUsuarioLogeado(usuarioLogeado);
+        setRefrescar(!refrescar);
+
+        Swal.fire({
+          icon: "success",
+          title: `${respuesta.data.msg}`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        const respuesta = await clienteAxios.post(
+          "/usuarios/eliminar-favorito",
+          datosPelicula
+        );
+
+        usuarioLogeado.peliculasFavoritas =
+          usuarioLogeado.peliculasFavoritas.filter(
+            (id) => id != datosPelicula.idPelicula
+          );
+        setUsuarioLogeado(usuarioLogeado);
+        setRefrescar(!refrescar);
+
+        Swal.fire({
+          icon: "success",
+          title: `${respuesta.data.msg}`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.msg || error,
+      });
+    }
+  };
 
   return (
     <>
       <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
-        {/* //TODO: AGREGAR UN CORAZÓN EN LA ESQUINA DE LA IMAGEN. CORAZÓN LLENO SI LO TIENE EN FAV VACÍO SI NO, Y AL PRESIONARLO ELIMNAR O ACTUALIZAR, DEPENDIENDO. */}
         {guardarPeliculas.docs?.map((pelicula) => (
           <div
             key={pelicula._id}
             className="movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between"
           >
-            {/* //TODO: FALTA HACER ESO */}
-            {/* {
-              usuarioLogeado.peliculasFavoritas.includes(pelicula._id )
-            } */}
-            {/* https://www.etnassoft.com/2016/11/11/comprobar-si-un-elemento-existe-dentro-de-un-array-en-javascript-sintaxis-es7-includes/ */}
+            <div className="flex flex-row-reverse justify-between items-center">
+              {usuarioLogeado.peliculasFavoritas?.includes(pelicula._id) ? (
+                <button
+                  className="text-2xl"
+                  onClick={() =>
+                    agregarEliminarFavorito(true, {
+                      idPelicula: pelicula._id,
+                      idUsuario: usuarioLogeado.id,
+                    })
+                  }
+                >
+                  <i className="fa-solid fa-heart text-red-600" />
+                </button>
+              ) : (
+                <button
+                  className="text-2xl"
+                  onClick={() =>
+                    agregarEliminarFavorito(false, {
+                      idPelicula: pelicula._id,
+                      idUsuario: usuarioLogeado.id,
+                    })
+                  }
+                >
+                  <i className="fa-regular fa-heart text-red-600" />
+                </button>
+              )}
 
-            <Link to={`/pelicula/${pelicula._id}`}>
               <p className="font-bold my-2">
                 Puntuación:{" "}
                 <span className="block">
@@ -61,16 +134,20 @@ const Inicio = () => {
                       pelicula.valoracion >= 5 ? "fa-solid" : "fa-regular"
                     }`}
                   />
-                </span>{" "}
+                </span>
               </p>
+            </div>
+            <Link to={`/pelicula/${pelicula._id}`}>
               <img
                 src={`http://localhost:5000/${pelicula.fotoPortada}`}
                 alt={`Foto: ${pelicula.fotoPortada}`}
                 className="w-full"
               />
+
               <h2 className="h-16 overflow-hidden">
                 {pelicula.nombrePelicula}
               </h2>
+
               <p className="px-3 py-2 bg-gray-200 dark:bg-gray-900 rounded-full border-none font-bold">
                 {pelicula.generos.map((genero, index) =>
                   genero.concat(index < pelicula.generos.length - 1 ? ", " : "")

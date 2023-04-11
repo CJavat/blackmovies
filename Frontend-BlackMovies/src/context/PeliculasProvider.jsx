@@ -8,6 +8,7 @@ const PeliculasProvider = ({ children }) => {
   const [paginas, setPaginas] = useState([]);
   const [token, setToken] = useState("");
   const [usuarioLogeado, setUsuarioLogeado] = useState({});
+  const [refrescar, setRefrescar] = useState(false);
 
   const cambiarDarkMode = () => {
     document.documentElement.classList.toggle("dark");
@@ -37,12 +38,14 @@ const PeliculasProvider = ({ children }) => {
         paginas,
         token,
         usuarioLogeado,
+        refrescar,
 
         setPaginas,
         setGuardarPeliculas,
         setNumeroPagina,
         setToken,
         setUsuarioLogeado,
+        setRefrescar,
 
         cambiarDarkMode,
       }}

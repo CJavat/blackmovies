@@ -10,7 +10,6 @@ const Peliculas = require("../models/Peliculas.models");
 //! OBTENER USUARIO POR SU ID --
 const obtenerUsuario = async (req, res, next) => {
   const { id } = req.body;
-  console.log(id);
   try {
     const existeUsuario = await Usuarios.findById(id);
     if (!existeUsuario) {
