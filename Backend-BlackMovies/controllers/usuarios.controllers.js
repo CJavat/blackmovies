@@ -229,6 +229,26 @@ const eliminarFavorito = async (req, res) => {
   }
 };
 
+//! OBTENER PELICULAS FAVORITAS DEL USUARIO --
+const obtenerPeliculasFavoritas = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const obtenerPeliculas = await Usuarios.findById(id).populate(
+      "peliculasFavoritas"
+    );
+    if (!obtenerPeliculas) {
+      return res.status(404).json({ msg: "No hay peliculas en favoritos" });
+    }
+
+    res.json(obtenerPeliculas);
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
+  }
+};
+
 module.exports = {
   obtenerUsuario,
   agregarUsuario,
@@ -238,4 +258,5 @@ module.exports = {
   decodificarToken,
   agregarFavorito,
   eliminarFavorito,
+  obtenerPeliculasFavoritas,
 };

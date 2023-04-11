@@ -1,4 +1,6 @@
 import { createContext, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import clienteAxios from "../helpers/clienteAxios";
 
 const PeliculasContext = createContext();
 
@@ -30,6 +32,36 @@ const PeliculasProvider = ({ children }) => {
     }
   }, []);
 
+  const agregarEliminarFavorito = async (esFavorito, datosPelicula) => {
+    try {
+      if (esFavorito === false) {
+        await clienteAxios.post("/usuarios/agregar-favorito", datosPelicula);
+
+        usuarioLogeado.peliculasFavoritas = [
+          ...usuarioLogeado.peliculasFavoritas,
+          datosPelicula.idPelicula,
+        ];
+        setUsuarioLogeado(usuarioLogeado);
+        setRefrescar(!refrescar);
+      } else {
+        await clienteAxios.post("/usuarios/eliminar-favorito", datosPelicula);
+
+        usuarioLogeado.peliculasFavoritas =
+          usuarioLogeado.peliculasFavoritas.filter(
+            (id) => id != datosPelicula.idPelicula
+          );
+        setUsuarioLogeado(usuarioLogeado);
+        setRefrescar(!refrescar);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.msg || error,
+      });
+    }
+  };
+
   return (
     <PeliculasContext.Provider
       value={{
@@ -48,6 +80,7 @@ const PeliculasProvider = ({ children }) => {
         setRefrescar,
 
         cambiarDarkMode,
+        agregarEliminarFavorito,
       }}
     >
       {children}

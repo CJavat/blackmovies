@@ -13,6 +13,7 @@ const {
   decodificarToken,
   agregarFavorito,
   eliminarFavorito,
+  obtenerPeliculasFavoritas,
 } = require("../controllers/usuarios.controllers");
 
 //! OBTENER USUARIO --
@@ -55,5 +56,8 @@ router.post("/agregar-favorito", agregarFavorito);
 
 //! ELIMINAR PELICULA FAVORITA --
 router.post("/eliminar-favorito", eliminarFavorito);
+
+//! OBTENER PELICULAS FAVORITAS --
+router.get("/obtener-peliculas-favoritas/:id", obtenerPeliculasFavoritas);
 
 module.exports = router;

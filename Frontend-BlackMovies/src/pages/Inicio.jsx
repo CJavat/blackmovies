@@ -10,65 +10,14 @@ const Inicio = () => {
     usuarioLogeado,
     guardarPeliculas,
     paginas,
-    refrescar,
 
-    setUsuarioLogeado,
     setNumeroPagina,
-    setRefrescar,
+
+    agregarEliminarFavorito,
   } = usePeliculas();
 
   const cambiarPagina = (pagina) => {
     setNumeroPagina(pagina);
-  };
-
-  const agregarEliminarFavorito = async (esFavorito, datosPelicula) => {
-    try {
-      if (esFavorito === false) {
-        const respuesta = await clienteAxios.post(
-          "/usuarios/agregar-favorito",
-          datosPelicula
-        );
-
-        usuarioLogeado.peliculasFavoritas = [
-          ...usuarioLogeado.peliculasFavoritas,
-          datosPelicula.idPelicula,
-        ];
-        setUsuarioLogeado(usuarioLogeado);
-        setRefrescar(!refrescar);
-
-        Swal.fire({
-          icon: "success",
-          title: `${respuesta.data.msg}`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        const respuesta = await clienteAxios.post(
-          "/usuarios/eliminar-favorito",
-          datosPelicula
-        );
-
-        usuarioLogeado.peliculasFavoritas =
-          usuarioLogeado.peliculasFavoritas.filter(
-            (id) => id != datosPelicula.idPelicula
-          );
-        setUsuarioLogeado(usuarioLogeado);
-        setRefrescar(!refrescar);
-
-        Swal.fire({
-          icon: "success",
-          title: `${respuesta.data.msg}`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.msg || error,
-      });
-    }
   };
 
   return (
