@@ -22,7 +22,7 @@ const RegistrarCuenta = () => {
         icon: "success",
         title: respuesta.data.msg,
         showConfirmButton: false,
-        timer: 5000,
+        timer: 1500,
       });
 
       navigate("/iniciar-sesion");

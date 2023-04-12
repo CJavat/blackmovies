@@ -1,63 +1,99 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import usePeliculas from "../hooks/usePeliculas";
 import { useEffect, useState } from "react";
 import clienteAxios from "../helpers/clienteAxios";
-//TODO: TERMINAR COMPONENTE.
-const MiPerfil = () => {
-  const {
-    usuarioLogeado,
-    guardarPeliculas,
-    refrescar,
-    setRefrescar,
-    agregarEliminarFavorito,
-  } = usePeliculas();
+import Swal from "sweetalert2";
 
-  const [peliculasFavoritas, setPeliculasFavoritas] = useState({});
+const MiPerfil = () => {
+  const navigate = useNavigate();
+  const { usuarioLogeado, setUsuarioLogeado, agregarEliminarFavorito } =
+    usePeliculas();
+
+  const [pelisFav, setPelisFav] = useState({});
+  const [refrescar, setRefrescar] = useState(false);
 
   useEffect(() => {
     const obtenerPeliculas = async () => {
-      //TODO: TERMINAR DE OBTENER Y PASARLOS AL STATE DE PELICULAS FAVORITAS Y DESPUES MODIFICAR EL STATE REFRESCAR.
       try {
         const respuesta = await clienteAxios.get(
           `/usuarios/obtener-peliculas-favoritas/${usuarioLogeado.id}`
         );
-        console.log(respuesta.data);
+        setPelisFav(respuesta.data);
+        setRefrescar(!refrescar);
       } catch (error) {
         console.log(error);
-        // Swal.fire({
-        //   icon: "error",
-        //   title: "Oops...",
-        //   text: error.response?.data?.msg || error,
-        // });
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.response?.data?.msg || error,
+        });
       }
     };
 
-    obtenerPeliculas();
-  }, [usuarioLogeado, refrescar]);
+    if (usuarioLogeado.id) obtenerPeliculas();
+  }, [usuarioLogeado.id, usuarioLogeado.peliculasFavoritas]);
 
-  const eliminarCuenta = (e) => {
-    // TODO: TERMINAR ELIMINAR CUENTA
+  const eliminarCuenta = async (e) => {
     e.preventDefault();
+
+    try {
+      Swal.fire({
+        title: "¿Estás seguro de eliminar tu cuenta?",
+        text: "Una vez eliminada no se podrá recuperar nada",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, Borrar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          clienteAxios
+            .delete(`/usuarios/eliminar-usuario/${usuarioLogeado.id}`)
+            .then((data) => {
+              //* Vaciar las variables.
+              localStorage.removeItem("token");
+              setUsuarioLogeado({});
+              Swal.fire("¡Cuenta Borrada!", data.data.msg, "success");
+              navigate("/");
+            })
+            .catch((error) => {
+              console.log(error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error.response?.data?.msg || error,
+              });
+            });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.msg || error,
+      });
+    }
   };
 
-  console.log(usuarioLogeado);
-
   return (
-    <div className="flex-1 self-center flex flex-col justify-center items-start px-2 border rounded-lg gap-1 movilS:w-11/12 tablet:w-96">
-      <div className="text-left w-full">
-        <p className="text-2xl uppercase">Nombre: {usuarioLogeado.nombre}</p>
-        <p className="text-2xl">NICKNAME: {usuarioLogeado.nickname}</p>
-        <p className="text-2xl">EMAIL: {usuarioLogeado.email}</p>
+    <div className="flex-1 self-center flex flex-col justify-center items-start px-2 movilS:p-2 tablet:py-5 border rounded-lg gap-1 movilS:w-11/12 tablet:w-11/12">
+      <div className="text-left w-full flex justify-center items-center movilS:flex-col tablet:flex-row">
+        <div className="movilS:w-full tablet:w-6/12">
+          <p className="text-2xl uppercase">Nombre: {usuarioLogeado.nombre}</p>
+          <p className="text-2xl">NICKNAME: {usuarioLogeado.nickname}</p>
+          <p className="text-2xl">EMAIL: {usuarioLogeado.email}</p>
+        </div>
 
-        <div className="w-full mt-5 flex movilS:flex-col gap-2">
+        <div className="movilS:mt-5 tablet:mt-0 flex movilS:flex-col gap-2 movilS:w-full tablet:w-5/12 laptop:w-3/12 desktop:w-2/12">
           <Link to="/editar-perfil">
-            <button className="w-full uppercase text-lg px-2 py-3 font-bold rounded-full bg-blue-600">
+            <button className="w-full uppercase text-lg px-2 py-3 font-bold rounded-full text-white bg-blue-600">
               Editar perfil
             </button>
           </Link>
 
           <button
-            className="w-full uppercase text-lg px-2 py-3 font-bold rounded-full bg-red-500"
+            className="w-full uppercase text-lg px-2 py-3 font-bold rounded-full text-white bg-red-500"
             onClick={eliminarCuenta}
           >
             Eliminar cuenta
@@ -65,13 +101,11 @@ const MiPerfil = () => {
         </div>
       </div>
 
-      {/* //TODO: TERMINAR EL MOSTRAR LAS PELICULAS FAVORITAS DEL USUARIO. */}
-      <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row justify-center items-center gap-4 px-2">
-        {/* //TODO: HACER QUE FUNCIONÉ */}
-        {/* {guardarPeliculas.docs?.map((pelicula) => (
+      <div className="w-full flex-1 flex movilS:flex-col tablet:flex-row tablet:flex-wrap justify-center items-center gap-4 px-2">
+        {pelisFav.peliculasFavoritas?.map((pelicula) => (
           <div
             key={pelicula._id}
-            className="movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between"
+            className="movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-2/12 desktop:w-2/12 flex flex-col justify-between"
           >
             <div className="flex flex-row-reverse justify-between items-center">
               {usuarioLogeado.peliculasFavoritas?.includes(pelicula._id) ? (
@@ -149,18 +183,10 @@ const MiPerfil = () => {
               </p>
             </Link>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
 };
 
 export default MiPerfil;
-
-/*
-  Nombre
-  NickName
-  Email
-  Password
-  PeliculasFavoritas
-*/

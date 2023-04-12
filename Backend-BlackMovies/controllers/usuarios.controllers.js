@@ -234,9 +234,9 @@ const obtenerPeliculasFavoritas = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const obtenerPeliculas = await Usuarios.findById(id).populate(
-      "peliculasFavoritas"
-    );
+    const obtenerPeliculas = await Usuarios.findById(id)
+      .select("-_id -nombre -email -nickname -password -rol -__v")
+      .populate({ path: "peliculasFavoritas", select: "-__v" });
     if (!obtenerPeliculas) {
       return res.status(404).json({ msg: "No hay peliculas en favoritos" });
     }
