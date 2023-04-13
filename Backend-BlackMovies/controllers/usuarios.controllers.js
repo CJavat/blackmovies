@@ -121,10 +121,14 @@ const actualizarUsuario = async (req, res) => {
     }
 
     //* Hashear el password actualizado, si existe.
-    if (req.body.password) {
+    if (datosActualizados.password.length > 0) {
       //* Hashear el password.
       const hash = await bcrypt.hash(datosActualizados.password, 12);
       datosActualizados.password = hash;
+    }
+
+    if (datosActualizados.password.length == 0) {
+      datosActualizados.password = existeUsuario.password;
     }
 
     await existeUsuario.updateOne(datosActualizados);

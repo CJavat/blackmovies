@@ -78,6 +78,7 @@ const MiPerfil = () => {
 
   return (
     <div className="flex-1 self-center flex flex-col justify-center items-start px-2 movilS:p-2 tablet:py-5 border rounded-lg gap-1 movilS:w-11/12 tablet:w-11/12">
+      <h1 className="self-center text-3xl font-bold mb-3">Mi Perfil</h1>
       <div className="text-left w-full flex justify-center items-center movilS:flex-col tablet:flex-row">
         <div className="movilS:w-full tablet:w-6/12">
           <p className="text-2xl uppercase">Nombre: {usuarioLogeado.nombre}</p>
