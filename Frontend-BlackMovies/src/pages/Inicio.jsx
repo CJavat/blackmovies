@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import usePeliculas from "../hooks/usePeliculas";
 import Paginacion from "../components/Paginacion";
-import clienteAxios from "../helpers/clienteAxios";
-import Swal from "sweetalert2";
 
 const Inicio = () => {
   const {

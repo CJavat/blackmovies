@@ -15,6 +15,7 @@ import Pelicula from "./pages/Pelicula";
 import NotFound from "./pages/NotFound";
 import MiPerfil from "./pages/MiPerfil";
 import EditarPerfil from "./pages/EditarPerfil";
+import VerPelicula from "./pages/VerPelicula";
 
 //! IMPORTAR COMPONENTES --
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/iniciar-sesion" element={<IniciarSesion />} />
             <Route path="/registrar-cuenta" element={<RegistrarCuenta />} />
             <Route path="/pelicula/:id" element={<Pelicula />} />
+            <Route path="/ver-pelicula/:id" element={<VerPelicula />} />
             <Route path="/mi-perfil" element={<MiPerfil />} />
             <Route path="/editar-perfil" element={<EditarPerfil />} />
             <Route path="*" element={<NotFound />} />
