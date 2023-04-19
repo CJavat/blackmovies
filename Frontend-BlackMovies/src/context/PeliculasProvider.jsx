@@ -62,6 +62,12 @@ const PeliculasProvider = ({ children }) => {
     }
   };
 
+  const formatearFecha = (fecha) => {
+    const fechaFormateada = fecha?.split("T");
+    const nuevaFecha = fechaFormateada[0];
+    return nuevaFecha;
+  };
+
   return (
     <PeliculasContext.Provider
       value={{
@@ -81,6 +87,7 @@ const PeliculasProvider = ({ children }) => {
 
         cambiarDarkMode,
         agregarEliminarFavorito,
+        formatearFecha,
       }}
     >
       {children}

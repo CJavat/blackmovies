@@ -74,7 +74,9 @@ const mostrarPelicula = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const pelicula = await Peliculas.findById(id);
+    const pelicula = await Peliculas.findById(id).populate(
+      "comentarios.usuario"
+    );
     if (!pelicula) {
       res.status(404).json({ msg: "No se encontró ninguna pelicula" });
     }
