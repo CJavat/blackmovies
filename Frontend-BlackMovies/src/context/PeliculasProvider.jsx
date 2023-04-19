@@ -11,6 +11,7 @@ const PeliculasProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [usuarioLogeado, setUsuarioLogeado] = useState({});
   const [refrescar, setRefrescar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const cambiarDarkMode = () => {
     document.documentElement.classList.toggle("dark");
@@ -77,6 +78,7 @@ const PeliculasProvider = ({ children }) => {
         token,
         usuarioLogeado,
         refrescar,
+        showModal,
 
         setPaginas,
         setGuardarPeliculas,
@@ -84,6 +86,7 @@ const PeliculasProvider = ({ children }) => {
         setToken,
         setUsuarioLogeado,
         setRefrescar,
+        setShowModal,
 
         cambiarDarkMode,
         agregarEliminarFavorito,

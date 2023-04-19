@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import clienteAxios from "../helpers/clienteAxios";
 import usePeliculas from "../hooks/usePeliculas";
+import Comentarios from "../components/Comentarios";
 
 const Pelicula = () => {
-  //* INFORMACIÓN DE LA PELÍCULA.
   const { id } = useParams();
+  const { showModal, setShowModal, formatearFecha } = usePeliculas();
+
   const [datosPelicula, setDatosPelicula] = useState({});
-  const { formatearFecha } = usePeliculas();
 
   useEffect(() => {
     const obtenerDatosPelicula = async () => {
@@ -19,20 +20,17 @@ const Pelicula = () => {
         setDatosPelicula(respuesta.data);
       } catch (error) {
         console.log(error);
-        // Swal.fire({
-        //   icon: "error",
-        //   title: "Oops...",
-        //   text: error.response?.data?.msg || error,
-        // });
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.response?.data?.msg || error,
+        });
       }
     };
 
     obtenerDatosPelicula();
   }, []);
 
-  // console.log(datosPelicula);
-
-  //TODO: TERMINAR ESTE COMPONENTE
   return (
     <div
       className="flex-1"
@@ -43,18 +41,18 @@ const Pelicula = () => {
         backgroundSize: "cover",
       }}
     >
-      <div className="flex flex-col justify-between items-center">
-        {" "}
-        {/* movilS:h-36 movilL:h-40 tablet:h-56 laptop:h-96 */}
-        <div className="flex movilS:flex-col tablet:flex-row justify-between items-center gap-4">
+      <div className="flex flex-col justify-between items-center gap-3">
+        <div className="w-full flex movilS:flex-col tablet:flex-row justify-center items-center gap-4">
           <img
             src={`http://localhost:5000/${datosPelicula.fotoPortada}`}
             alt={datosPelicula.fotoPortada}
             className="w-fit movilS:h-36 movilL:h-40 tablet:h-56 laptop:h-96"
           />
 
-          <div className="flex flex-col justify-center items-center">
-            <h3>{datosPelicula.nombrePelicula}</h3>
+          <div className="flex flex-col justify-center movilS:items-center tablet:items-start movilS:w-11/12 tablet:w-8/12">
+            <h3 className="text-2xl font-bold">
+              {datosPelicula.nombrePelicula}
+            </h3>
             <p className="font-bold my-2">
               <span className="block">
                 <i
@@ -96,19 +94,38 @@ const Pelicula = () => {
                 )
               )}
             </p>
-            <p>{datosPelicula.sinopsis}</p>
+            <p className="text-start w-11/12 overflow-hidden">
+              {datosPelicula.sinopsis}
+            </p>
           </div>
         </div>
-        {/* 
-          //TODO: INTENTAR HACER QUE SEA TIPO MODAL, QUE LE PRESIONE A VER COMENTARIOS Y TE APAREZCA UN DIV CON COMENTARIOS.
-        */}
+
         <div className="w-full">
-          {datosPelicula.comentarios?.map((pelicula) => (
-            <div key={pelicula._id} className="border-2 border-red-600">
-              <p>{pelicula.usuario.nickname}</p>
-              <p>{pelicula.texto}</p>
-            </div>
-          ))}
+          {datosPelicula?.comentarios &&
+          Object.keys(datosPelicula.comentarios).length > 0 ? (
+            <>
+              <button
+                className="bg-black text-white active:bg-sky-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={() => setShowModal(true)}
+              >
+                Ver Comentarios
+              </button>
+
+              {showModal ? (
+                <Comentarios comentarios={datosPelicula.comentarios} />
+              ) : null}
+
+              <Link
+                to={`/ver-pelicula/${id}`}
+                className="bg-white text-black active:bg-sky-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              >
+                Ver Pelicula
+              </Link>
+            </>
+          ) : (
+            <p className="font-bold text-2xl">No hay comentarios</p>
+          )}
         </div>
       </div>
     </div>
@@ -116,10 +133,3 @@ const Pelicula = () => {
 };
 
 export default Pelicula;
-
-/*
-FALTA DARLE ESTILO
-QUE SE VEA BIEN EN MÓVIL
-*/
-
-//TODO: HACER ESTE COMPONENTE.
