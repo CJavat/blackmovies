@@ -262,10 +262,10 @@ const buscarPeliculas = async (req, res) => {
   }
 };
 
-//! AGREGAR COMENTARIOS A LA PELÍCULA --
-const comentarPelicula = async (req, res) => {
+//! VALORAR PELICULA --
+const valorarPelicula = async (req, res) => {
   const { id } = req.params;
-  const { usuario, texto } = req.body;
+  const { valoracion, usuario, texto } = req.body;
 
   try {
     const existePelicula = await Peliculas.findById(id);
@@ -273,40 +273,20 @@ const comentarPelicula = async (req, res) => {
       return res.status(404).json({ msg: "No existe la película" });
     }
 
+    if (parseInt(valoracion) < 1 || parseInt(valoracion) > 5) {
+      return res.status(400).json({ msg: "Puntaje incorrecto" });
+    }
+
     const agregarComentario = {
       usuario,
       texto,
     };
-    console.log(agregarComentario);
+
     const comentarios = [...existePelicula.comentarios, agregarComentario];
     existePelicula.comentarios = comentarios;
 
-    await existePelicula.save();
-
-    res.json({ msg: "Comentario agregado correctamente" });
-  } catch (error) {
-    res
-      .status(400)
-      .json({ msg: `Ocurrió un error en la consulta: ${error.message}` });
-  }
-};
-
-//! VALORAR PELICULA --
-const valorarPelicula = async (req, res) => {
-  const { _id, valoracion } = req.body;
-
-  try {
-    const existePelicula = await Peliculas.findById(_id);
-    if (!existePelicula) {
-      return res.status(404).json({ msg: "No existe la película" });
-    }
-
-    if (valoracion < 1 || valoracion > 5) {
-      return res.status(400).json({ msg: "Puntaje incorrecto" });
-    }
-
     existePelicula.valoracion = Math.floor(
-      (valoracion + existePelicula.valoracion) / 2
+      (parseInt(valoracion) + existePelicula.valoracion) / 2
     );
 
     await existePelicula.save();
@@ -329,6 +309,5 @@ module.exports = {
   mostrarPorGenero,
   mostrarPorValoracion,
   buscarPeliculas,
-  comentarPelicula,
   valorarPelicula,
 };

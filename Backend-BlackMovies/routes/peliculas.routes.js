@@ -13,7 +13,6 @@ const {
   mostrarPorGenero,
   mostrarPorValoracion,
   buscarPeliculas,
-  comentarPelicula,
   valorarPelicula,
 } = require("../controllers/peliculas.controllers");
 
@@ -41,10 +40,7 @@ router.get("/mostrar-valoracion/:valoracion", mostrarPorValoracion);
 //! BUSCAR PELÍCULAS POR SU NOMBRE --
 router.get("/buscar-peliculas", buscarPeliculas);
 
-//! COMENTAR PELÍCULA --
-router.post("/comentar-pelicula/:id", comentarPelicula);
-
 //! VALORAR PELICULA --
-router.post("/valorar-pelicula", valorarPelicula);
+router.post("/valorar-pelicula/:id", valorarPelicula);
 
 module.exports = router;

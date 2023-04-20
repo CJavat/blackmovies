@@ -100,7 +100,7 @@ const Pelicula = () => {
           </div>
         </div>
 
-        <div className="w-full">
+        <div className="w-full flex movilS:flex-col tablet:flex-row justify-center items-center gap-5">
           {datosPelicula?.comentarios &&
           Object.keys(datosPelicula.comentarios).length > 0 ? (
             <>
@@ -115,17 +115,16 @@ const Pelicula = () => {
               {showModal ? (
                 <Comentarios comentarios={datosPelicula.comentarios} />
               ) : null}
-
-              <Link
-                to={`/ver-pelicula/${id}`}
-                className="bg-white text-black active:bg-sky-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-              >
-                Ver Pelicula
-              </Link>
             </>
           ) : (
             <p className="font-bold text-2xl">No hay comentarios</p>
           )}
+          <Link
+            to={`/ver-pelicula/${id}`}
+            className="bg-white text-black active:bg-sky-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          >
+            Ver Pelicula
+          </Link>
         </div>
       </div>
     </div>
