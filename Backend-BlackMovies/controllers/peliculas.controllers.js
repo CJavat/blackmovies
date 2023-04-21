@@ -248,8 +248,11 @@ const buscarPeliculas = async (req, res) => {
 
   try {
     const obtenerPeliculas = await Peliculas.find({
-      nombrePelicula: { $regex: nombre, $options: "$i" },
-    });
+      nombrePelicula: { $regex: nombre, $options: "i" },
+    }).select(
+      "-fechaPelicula -generos -sinopsis -fotoFondo -pelicula -__v -comentarios"
+    );
+
     if (!obtenerPeliculas || obtenerPeliculas.length === 0) {
       return res.status(404).json({ msg: "No se encontraron películas" });
     }

@@ -196,5 +196,3 @@ const VerPelicula = () => {
 };
 
 export default VerPelicula;
-
-//TODO: TERMINAR COMPONENTE.

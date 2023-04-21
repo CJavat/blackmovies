@@ -38,7 +38,7 @@ router.get("/mostrar-genero/:genero", mostrarPorGenero);
 router.get("/mostrar-valoracion/:valoracion", mostrarPorValoracion);
 
 //! BUSCAR PELÍCULAS POR SU NOMBRE --
-router.get("/buscar-peliculas", buscarPeliculas);
+router.post("/buscar-peliculas", buscarPeliculas);
 
 //! VALORAR PELICULA --
 router.post("/valorar-pelicula/:id", valorarPelicula);

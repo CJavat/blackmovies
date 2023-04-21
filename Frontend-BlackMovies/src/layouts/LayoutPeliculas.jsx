@@ -111,7 +111,6 @@ const LayoutPeliculas = () => {
     <div className="flex flex-col justify-between items-center w-full min-h-screen text-center">
       <Header />{" "}
       <div className="w-full flex-1 self-start my-3 flex flex-col gap-3">
-        {/* //TODO: TERMINAR COMPONENTE DE BUSCAR*/}
         <Buscar />
         <Outlet />
       </div>
