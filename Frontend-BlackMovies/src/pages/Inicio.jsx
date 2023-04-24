@@ -111,9 +111,22 @@ const Inicio = () => {
           </button>
         ) : null}
 
-        {paginas.map((pagina) => (
-          <Paginacion key={pagina} pagina={pagina} />
-        ))}
+        {guardarPeliculas?.totalPages <= 3 ? (
+          <>
+            {paginas.map((pagina) => (
+              <Paginacion key={pagina} pagina={pagina} />
+            ))}
+          </>
+        ) : (
+          <>
+            {guardarPeliculas?.page === 1 ? null : <Paginacion pagina={1} />}
+            <Paginacion pagina={guardarPeliculas?.page} />
+            {guardarPeliculas?.page === guardarPeliculas?.totalPages ? null : (
+              <Paginacion pagina={guardarPeliculas?.totalPages} />
+            )}
+          </>
+        )}
+
         {guardarPeliculas?.nextPage ? (
           <button onClick={() => cambiarPagina(guardarPeliculas.nextPage)}>
             <i className="fa-solid fa-arrow-right"></i>

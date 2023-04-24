@@ -7,7 +7,7 @@ import Comentarios from "../components/Comentarios";
 
 const Pelicula = () => {
   const { id } = useParams();
-  const { showModal, setShowModal, formatearFecha } = usePeliculas();
+  const { showModal, refrescar, setShowModal, formatearFecha } = usePeliculas();
 
   const [datosPelicula, setDatosPelicula] = useState({});
 
@@ -29,7 +29,7 @@ const Pelicula = () => {
     };
 
     obtenerDatosPelicula();
-  }, []);
+  }, [refrescar]);
 
   return (
     <div

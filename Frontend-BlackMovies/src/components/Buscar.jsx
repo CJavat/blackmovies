@@ -5,7 +5,8 @@ import usePeliculas from "../hooks/usePeliculas";
 import { Link } from "react-router-dom";
 
 const Buscar = () => {
-  const { showModalPeliculas, setShowModalPeliculas } = usePeliculas();
+  const { refrescar, showModalPeliculas, setRefrescar, setShowModalPeliculas } =
+    usePeliculas();
 
   const [datos, setDatos] = useState("");
   const [peliculasEncontradas, setPeliculasEncontradas] = useState([]);
@@ -34,6 +35,7 @@ const Buscar = () => {
   };
 
   const irAPeliculas = (e) => {
+    setRefrescar(!refrescar);
     setPeliculasEncontradas([]);
     setShowModalPeliculas(false);
   };
@@ -41,7 +43,7 @@ const Buscar = () => {
   return (
     <>
       <div
-        className="bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white rounded-full m-auto h-10 movilS:w-full tablet:w-6/12 flex justify-center items-center gap-2"
+        className=" bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white rounded-full m-auto h-10 movilS:w-full tablet:w-6/12 flex justify-center items-center gap-2 hover:cursor-pointer"
         onClick={() => setShowModalPeliculas(true)}
       >
         <p className="font-bold text-lg uppercase">buscar pelicula</p>
@@ -51,15 +53,14 @@ const Buscar = () => {
       {showModalPeliculas ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            <div className="relative movilS:w-auto tablet:w-full my-6 mx-auto max-w-3xl flex justify-center items-center">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col bg-white dark:bg-black outline-none focus:outline-none h-fit movilS:w-72 movilL:w-96 tablet:w-11/12">
                 {/*header*/}
-                <div className="self-center flex items-start justify-between py-5 border-b border-solid border-slate-200 rounded-t">
-                  {/* //TODO: TERMINAR EL DISEÑO */}
+                <div className=" w-full self-center flex items-start justify-between py-5 border-b border-solid border-slate-200 rounded-t">
                   <form
                     onSubmit={buscar}
-                    className="text-black dark:text-white flex justify-center items-center gap-2 w-full"
+                    className="text-black dark:text-white flex justify-center items-center gap-2 w-full my-3"
                   >
                     <input
                       type="text"
@@ -78,13 +79,13 @@ const Buscar = () => {
                 </div>
 
                 {/*body*/}
-                <div className="relative p-2 flex-auto w-full overflow-x-scroll flex flex-col justify-center items-center">
-                  <div className="self-start flex justify-start items-center gap-4">
+                <div className="relative p-2 flex-auto w-full overflow-x-auto flex flex-col justify-center items-center">
+                  <div className="self-start flex justify-between items-center gap-4">
                     {Object.keys(peliculasEncontradas).length > 0
                       ? peliculasEncontradas.map((pelicula) => (
                           <div
                             key={pelicula._id}
-                            className="relative movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-2/12 flex flex-col justify-between"
+                            className="relative movilS:w-9/12 movilL:w-8/12 tablet:w-3/12 laptop:w-5/12 desktop:w-3/12 flex flex-col justify-between"
                           >
                             <p className="font-bold bg-black rounded-full px-2 py-1 text-red-500 absolute top-0 right-0">
                               {pelicula.valoracion}
@@ -95,7 +96,6 @@ const Buscar = () => {
                               to={`/pelicula/${pelicula._id}`}
                               className="movilS:w-28 tablet:w-40"
                               onClick={irAPeliculas}
-                              //TODO: ARREGLAR POR QUE NO ME MANDA A OTRAS PELICULAS DESPUES DE IR A UNA.
                             >
                               <img
                                 src={`http://localhost:5000/${pelicula.fotoPortada}`}
@@ -134,5 +134,3 @@ const Buscar = () => {
 };
 
 export default Buscar;
-
-//TODO: TERMINAR COMPONENTE DE BUSCAR*/
